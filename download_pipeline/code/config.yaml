@@ -1,0 +1,65 @@
+project:
+  repo_id: "CASTLE-Dataset/CASTLE2024"
+  repo_type: "dataset"
+
+paths:
+  download_pipeline_root: "E:/CASTLE_MM26_Challenge/download_pipeline"
+  code_dir: "E:/CASTLE_MM26_Challenge/download_pipeline/code"
+  raw_cache_dir: "E:/CASTLE_MM26_Challenge/download_pipeline/raw_cache"
+  processed_data_dir: "E:/CASTLE_MM26_Challenge/download_pipeline/processed_data"
+  hf_home: "E:/CASTLE_MM26_Challenge/download_pipeline/raw_cache/hf_home"
+  hf_cache: "E:/CASTLE_MM26_Challenge/download_pipeline/raw_cache/hf_cache"
+
+tools:
+  ffmpeg: "ffmpeg"
+  ffprobe: "ffprobe"
+
+huggingface:
+  prefer_xet: true
+  fallback_to_http_on_stall: true
+  max_attempts_per_file: 5
+  heartbeat_interval_seconds: 10
+  worker_poll_interval_seconds: 0.25
+  stall_timeout_seconds: 1800
+  download_stall_timeout_seconds: 600
+  worker_download_timeout_seconds: 300
+  worker_etag_timeout_seconds: 30
+  download_environment:
+    HF_XET_HIGH_PERFORMANCE: "0"
+    HF_XET_CLIENT_ENABLE_ADAPTIVE_CONCURRENCY: "1"
+    HF_XET_CLIENT_AC_MIN_DOWNLOAD_CONCURRENCY: "4"
+    HF_XET_CLIENT_AC_INITIAL_DOWNLOAD_CONCURRENCY: "16"
+    HF_XET_CLIENT_AC_MAX_DOWNLOAD_CONCURRENCY: "64"
+    HTTP_PROXY: "http://127.0.0.1:7897"
+    HTTPS_PROXY: "http://127.0.0.1:7897"
+    ALL_PROXY: "http://127.0.0.1:7897"
+    NO_PROXY: "localhost,127.0.0.1,::1"
+
+processing:
+  video_extensions: [".mp4"]
+  fps: 1
+  frame_width: 3840
+  jpg_q: 2
+  resize_extracted_frames: true
+  resized_frame_width: 1920
+  frame_resize_workers: 6
+  delete_raw_video_after_verified: true
+  keep_non_video_files: true
+  non_video_small_file_threshold_bytes: 1048576
+  non_video_small_file_progress_batch_size: 100
+
+safety:
+  min_free_disk_gb: 30
+  backup_progress_before_repair: true
+  quarantine_size_mismatched_downloads: true
+
+logging:
+  level: "INFO"
+  scan_progress_every_files: 100
+  scan_progress_interval_seconds: 15
+  scan_checkpoint_every_files: 100
+  scan_max_attempts_per_segment: 5
+  scan_retry_backoff_seconds: [10, 30, 60, 120]
+  command_progress_every_items: 25
+  command_progress_interval_seconds: 30
+  heartbeat_dir_size_refresh_interval_seconds: 300

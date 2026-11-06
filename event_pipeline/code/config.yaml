@@ -1,0 +1,21 @@
+paths:
+  processed_data_root: ../../download_pipeline/processed_data/main
+  embed_chunks_root: ../../download_pipeline/processed_data/embed_chunks
+  tipsv2_root: ../../embedding_pipeline/tipsv2_image_cls/embedding_data/main
+  qwen3_root: ../../embedding_pipeline/qwen3_text_dense/embedding_data/main
+  bgem3_root: ../../embedding_pipeline/bgem3_text_sparse/embedding_data/main
+  view_meta_path: ../config/view_meta.yaml
+  output_root: ../event_data
+
+run:
+  batch_size: 8192
+  max_event_frames: 512
+  sparse_top_n: 128
+
+segmentation:
+  fixed_room_l2_min_sec: 10
+  ego_person_l2_min_sec: 3
+  l2_max_sec: 180
+  l3_max_sec: 300
+  l4_max_sec: 1200
+  l5_max_sec: 7200

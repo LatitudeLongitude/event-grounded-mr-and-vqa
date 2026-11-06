@@ -1,0 +1,38 @@
+﻿paths:
+  project_root: ../../..
+  module_root: ..
+  data_root: ../../../download_pipeline/processed_data
+  chunks_path: ../../../download_pipeline/processed_data/embed_chunks/chunks.jsonl
+  meta_summary_path: ../../../download_pipeline/processed_data/embed_chunks/meta/summary.json
+  model_root: auto
+  output_root: ../embedding_data
+
+model:
+  model_id: BAAI/bge-m3
+  output_type: learned_sparse
+  use_dense: false
+  use_sparse: true
+  use_colbert: false
+  use_late_interaction: false
+  local_files_only: true
+  sparse_value_dtype: float16
+  sparse_index_dtype: int32
+  sparse_encoding: little_endian_int32_indices_float16_values
+  max_length: 8192
+  use_fp16: true
+
+runtime:
+  gpu_ids: [0]
+  batch_size: 4
+  max_retries: 1
+  max_gpu_utilization: 10
+  min_free_memory_mib: 30000
+  status_interval_seconds: 30
+  minimum_output_free_gib: 10
+  records_per_shard: 10000
+
+parquet:
+  compression: zstd
+  compression_level: 3
+  row_group_size: 512
+

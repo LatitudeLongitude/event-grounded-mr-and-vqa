@@ -1,0 +1,81 @@
+# Source metadata seed for event segmentation.
+# Future code must validate this against inventory from actual data; do not hardcode availability.
+
+version: 0.1
+time_unit: seconds_since_day_start
+
+source_roles:
+  fixed_room:
+    description: "Static room cameras; useful for location, continuity, and global context."
+    sources:
+      Kitchen:
+        location_hint: kitchen
+        expected_modalities: [frames, image_embedding, transcript_optional]
+      Living1:
+        location_hint: living_room
+        expected_modalities: [frames, image_embedding, transcript_optional]
+      Living2:
+        location_hint: living_room
+        expected_modalities: [frames, image_embedding, transcript_optional]
+      Meeting:
+        location_hint: meeting_room
+        expected_modalities: [frames, image_embedding, transcript_optional]
+      Reading:
+        location_hint: reading_room
+        expected_modalities: [frames, image_embedding, transcript_optional]
+
+  ego_person:
+    description: "Head-mounted or person-centric cameras; useful for hands, objects, speech context, and actor evidence."
+    sources:
+      Allie:
+        person_hint: Allie
+        expected_modalities: [frames, image_embedding, transcript]
+      Bao:
+        person_hint: Bao
+        expected_modalities: [transcript, frames_optional, image_embedding_optional]
+        notes: "Seen in text-derived shards; future inventory must determine actual video coverage."
+      Bjorn:
+        person_hint: Bjorn
+        expected_modalities: [frames, image_embedding, transcript]
+        notes: "Filesystem/source name uses Bjorn."
+      Cathal:
+        person_hint: Cathal
+        expected_modalities: [frames, image_embedding, transcript]
+      Florian:
+        person_hint: Florian
+        expected_modalities: [frames, image_embedding, transcript]
+      Klaus:
+        person_hint: Klaus
+        expected_modalities: [frames, image_embedding, transcript]
+      Luca:
+        person_hint: Luca
+        expected_modalities: [frames, image_embedding, transcript]
+      Onanong:
+        person_hint: Onanong
+        expected_modalities: [frames, image_embedding, transcript]
+      Stevan:
+        person_hint: Stevan
+        expected_modalities: [frames, image_embedding, transcript]
+      Tien:
+        person_hint: Tien
+        expected_modalities: [frames, image_embedding, transcript]
+      Werner:
+        person_hint: Werner
+        expected_modalities: [frames, image_embedding, transcript]
+
+fusion_defaults:
+  missing_modality_policy: unknown_not_negative
+  cross_source_time_slack_sec:
+    l1_micro: 3
+    l2_source: 10
+    l3_global: 60
+    l4_activity: 60
+    l5_session: 300
+  fixed_room_weight_hints:
+    location_context: 1.0
+    actor_identity: 0.4
+    hand_object_detail: 0.5
+  ego_person_weight_hints:
+    location_context: 0.6
+    actor_identity: 1.0
+    hand_object_detail: 1.0

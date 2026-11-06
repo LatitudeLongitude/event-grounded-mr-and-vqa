@@ -1,0 +1,28 @@
+paths:
+  project_root: ../../..
+  module_root: ..
+  data_root: ../../../download_pipeline/processed_data
+  chunks_path: ../../../download_pipeline/processed_data/embed_chunks/chunks.jsonl
+  meta_summary_path: ../../../download_pipeline/processed_data/embed_chunks/meta/summary.json
+  model_root: auto
+  output_root: ../embedding_data
+
+model:
+  model_id: Qwen/Qwen3-Embedding-8B
+  embedding_dim: 4096
+  max_length: 32768
+  inference_dtype: float16
+
+runtime:
+  gpu_ids: [0]
+  batch_size: 2
+  max_retries: 1
+  max_gpu_utilization: 10
+  min_free_memory_mib: 30000
+  status_interval_seconds: 30
+  minimum_output_free_gib: 10
+
+parquet:
+  compression: zstd
+  compression_level: 3
+  row_group_size: 512

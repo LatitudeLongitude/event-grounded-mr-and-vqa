@@ -1,0 +1,154 @@
+schema_version: castle_mm26_fully_automatic_config_v1
+mode: fully_automatic
+backend: parquet
+allow_qdrant: false
+write_official_zip: true
+active_environment_profile: server_linux
+
+runtime:
+  full_smoke_all_queries: false
+
+inputs:
+  processed_data_root: ${environment.processed_data_root}
+  event_run_root: ${environment.event_run_root}
+  tipsv2_root: ${environment.tipsv2_root}
+  qwen3_dense_root: ${environment.qwen3_dense_root}
+  bgem3_sparse_root: ${environment.bgem3_sparse_root}
+
+environment_profiles:
+  local_windows:
+    repo_root: E:/CASTLE_MM26_Challenge
+    processed_data_root: E:/CASTLE_MM26_Challenge/download_pipeline/processed_data
+    event_run_root: E:/CASTLE_MM26_Challenge/event_pipeline/event_data/formal/castle-mm26-formal-20260623-v1
+    tipsv2_root: E:/CASTLE_MM26_Challenge/embedding_pipeline/tipsv2_image_cls/embedding_data/main
+    qwen3_dense_root: E:/CASTLE_MM26_Challenge/embedding_pipeline/qwen3_text_dense/embedding_data/main
+    bgem3_sparse_root: E:/CASTLE_MM26_Challenge/embedding_pipeline/bgem3_text_sparse/embedding_data/main
+    output_root: E:/CASTLE_MM26_Challenge/solution/fully_automatic_track/outputs
+  server_linux:
+    repo_root: /mnt/data4/CASTLE_MM26_Challenge
+    processed_data_root: /mnt/data4/CASTLE_MM26_Challenge/download_pipeline/processed_data
+    event_run_root: /mnt/data4/CASTLE_MM26_Challenge/event_pipeline/event_data/formal/castle-mm26-formal-20260623-v1
+    tipsv2_root: /mnt/data4/CASTLE_MM26_Challenge/embedding_pipeline/tipsv2_image_cls/embedding_data/main
+    qwen3_dense_root: /mnt/data4/CASTLE_MM26_Challenge/embedding_pipeline/qwen3_text_dense/embedding_data/main
+    bgem3_sparse_root: /mnt/data4/CASTLE_MM26_Challenge/embedding_pipeline/bgem3_text_sparse/embedding_data/main
+    output_root: /mnt/data4/CASTLE_MM26_Challenge/solution/fully_automatic_track/outputs
+
+model_profiles:
+  local_windows:
+    qwen3_embedding_model_root: E:/models/Qwen3-Embedding-8B
+    bgem3_model_root: E:/models/bge-m3
+  server_linux:
+    tipsv2_model_root: /mnt/data1/models/google/tipsv2-g14
+    qwen3_embedding_model_root: /mnt/data1/models/Qwen/Qwen3-Embedding-8B
+    bgem3_model_root: /mnt/data1/models/BAAI/bge-m3
+    qwen3_reranker_model_root: /mnt/data1/models/Qwen/Qwen3-Reranker-8B
+
+qa_mllm:
+  endpoint: https://openrouter.ai/api/v1/chat/completions
+  model: openai/gpt-5.5
+  api_key_env: OPENROUTER_API_KEY
+  http_referer_env: OPENROUTER_HTTP_REFERER
+  openrouter_title: CASTLE-MM26-Fully-Automatic
+  request_timeout_sec: 90
+  max_retries: 2
+  required_supported_parameters: [response_format, structured_outputs]
+  max_prompt_images: 12
+  response_format:
+    type: json_schema
+    json_schema:
+      name: castle_mm26_qa_answer
+      strict: true
+      schema:
+        type: object
+        additionalProperties: false
+        required: [answer, answer_type, confidence, supporting_evidence_ids, rationale_short]
+        properties:
+          answer: {type: string}
+          answer_type: {type: string}
+          confidence: {type: number, minimum: 0, maximum: 1}
+          supporting_evidence_ids:
+            type: array
+            items: {type: string}
+            minItems: 1
+          rationale_short: {type: string}
+
+day_date_map:
+  1:
+    date: 2024-12-03
+    weekday: Tuesday
+    proof: [download_pipeline/processed_data/auxiliary/photo/Cathal/clip/day1/20241203_075715_000.jpg]
+  2:
+    date: 2024-12-04
+    weekday: Wednesday
+    proof: [download_pipeline/processed_data/auxiliary/photo/Cathal/clip/day2/20241204_100631_000.jpg]
+  3:
+    date: 2024-12-05
+    weekday: Thursday
+    proof: [download_pipeline/processed_data/auxiliary/photo/Cathal/clip/day3/20241205_075305_000.jpg]
+  4:
+    date: 2024-12-06
+    weekday: Friday
+    proof: [download_pipeline/processed_data/auxiliary/photo/Cathal/clip/day4/20241206_070506_000.jpg]
+
+official_sources:
+  challenge_url: https://castle-dataset.github.io/challenges/mm26/
+  dataset_card_url: https://huggingface.co/datasets/CASTLE-Dataset/CASTLE2024
+  openrouter_chat_completions_docs: https://openrouter.ai/docs/api-reference/chat-completion
+
+preflight:
+  verify_model_fingerprints: true
+  forbid_server_filesystem_model_api_inference_for_server_models: true
+  require_openrouter_qa_mllm: true
+  require_openrouter_model_parameter_preflight: true
+
+submission:
+  sort_interval_rows_by_final_score: true
+
+profile_registry:
+  recall_profiles:
+    eis_visual_high_recall: {visual_top_k: 3000, text_dense_top_k: 500, text_sparse_top_k: 500, visual_reserve_per_day_source: 30, visual_reserve_per_source_hour: 3, text_reserve_per_source: 10, patch_input_scope: full_top_k_plus_reserve, text_rerank_input_cap: 1200}
+    eis_text_visual_high_recall: {visual_top_k: 3000, text_dense_top_k: 500, text_sparse_top_k: 500, visual_reserve_per_day_source: 30, visual_reserve_per_source_hour: 3, text_reserve_per_source: 10, patch_input_scope: full_top_k_plus_reserve, text_rerank_input_cap: 1200}
+    ois_visual_high_recall: {visual_top_k: 5000, text_dense_top_k: 300, text_sparse_top_k: 300, visual_reserve_per_day_source: 50, visual_reserve_per_source_hour: 5, text_reserve_per_source: 6, patch_input_scope: full_top_k_plus_reserve, text_rerank_input_cap: 900}
+    qa_text_high_recall: {text_dense_top_k: 800, text_sparse_top_k: 800, text_reserve_per_source: 15, text_rerank_input_cap: 1200, text_rerank_keep_top: 20, visual_probe_top_k: 600, visual_probe_reserve_per_day_source: 10, visual_probe_reserve_per_source_hour: 1, visual_probe_patch_input_scope: full_top_k_plus_reserve}
+  scoring_profiles:
+    visual_short_action:
+      final_weights: {visual_pos: 0.75, text_pos: 0.25, text_neg: 0.35}
+    text_context_action:
+      final_weights: {visual_pos: 0.35, text_pos: 0.65, text_neg: 0.50}
+    long_activity:
+      final_weights: {visual_pos: 0.60, text_pos: 0.40, text_neg: 0.30}
+    tiny_object: {object_track_weights: {visual_pos: 0.90, text_pos: 0.10, text_neg: 0.40}}
+    distinctive_object: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.35}}
+    tiny_fixed_object: {object_track_weights: {visual_pos: 0.90, text_pos: 0.10, text_neg: 0.40}}
+    kitchen_tool: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.35}}
+    stateful_object: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.35}}
+    location_object: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.35}}
+    category_exclusion: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.50}}
+    viewpoint_constrained: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.35}}
+    living_category: {object_track_weights: {visual_pos: 0.90, text_pos: 0.10, text_neg: 0.45}}
+    household_object: {object_track_weights: {visual_pos: 0.85, text_pos: 0.15, text_neg: 0.35}}
+    qa_evidence: {evidence_weights: {reranker: 0.75, visual_probe: 0.25, text_neg: 0.50}}
+  scoring_component_profiles:
+    prompt_positive_default: {best_canonical_or_primary_prompt_score: 0.60, max_alias_score: 0.25, mean_top3_prompt_score: 0.15}
+    negative_prompt_default: {max_negative_score_norm: 0.18, negative_keyword_context_hit: 0.07}
+    patch_frame_default: {cls_score: 0.10, max_patch_score: 0.55, top5_patch_mean: 0.20, local_temporal_cluster_score: 0.10, source_role_prior: 0.05}
+    text_hit_default: {dense_score: 0.25, sparse_score: 0.20, reranker_score: 0.45, dual_channel_bonus: 0.10}
+    eis_visual_event_default: {max_patch_frame_score: 0.32, top5_patch_mean: 0.20, hit_density_norm: 0.16, temporal_concentration: 0.12, representative_frame_support: 0.10, local_cluster_support: 0.05, source_role_prior: 0.05}
+    eis_event_embedding_default: {visual_centroid_similarity: 0.50, text_dense_centroid_similarity: 0.35, sparse_aggregate_similarity: 0.15}
+  threshold_profiles:
+    eis_visual_short_action: {submit_quantile: 0.92, min_submit_floor: 0.58, hard_floor: 0.45, tail_audit_floor: 0.39, tail_margin: 0.12, min_independent_evidence: 1}
+    eis_text_context_action: {submit_quantile: 0.90, min_submit_floor: 0.55, hard_floor: 0.42, tail_audit_floor: 0.36, tail_margin: 0.14, min_independent_evidence: 1}
+    eis_long_activity: {submit_quantile: 0.86, min_submit_floor: 0.52, hard_floor: 0.40, tail_audit_floor: 0.34, tail_margin: 0.16, min_independent_evidence: 1}
+    ois_tiny_object: {submit_quantile: 0.88, min_submit_floor: 0.54, hard_floor: 0.40, tail_audit_floor: 0.34, tail_margin: 0.16, min_independent_evidence: 1}
+    ois_distinctive_object: {submit_quantile: 0.90, min_submit_floor: 0.58, hard_floor: 0.44, tail_audit_floor: 0.38, tail_margin: 0.14, min_independent_evidence: 1}
+    qa_evidence_required: {reducer_min_evidence: by_answer_policy, default_min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, low_confidence_allowed_with_evidence: true, no_timed_evidence_policy: fail_official_packaging}
+  output_profiles:
+    eis_interval_default: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 0, nms_iou: 0.60}
+    eis_medium_activity: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 0, nms_iou: 0.60}
+    eis_long_activity: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 0, nms_iou: 0.60}
+    eis_social_transcript: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 0, nms_iou: 0.60}
+    ois_interval_default: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 5, nms_iou: 0.50}
+    ois_persistent_object: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 5, nms_iou: 0.50}
+    ois_context_object: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 5, nms_iou: 0.50}
+    ois_location_object: {require_at_least_one_row: false, empty_result_policy: allow_empty, merge_gap_sec: 5, nms_iou: 0.50}
+    qa_answer_default: {require_exactly_one_row: true, require_english_answer: true, require_source_time_evidence: true}

@@ -1,0 +1,38 @@
+paths:
+  project_root: /mnt/data4/CASTLE_MM26_Challenge
+  module_root: /mnt/data4/CASTLE_MM26_Challenge/embedding_pipeline/tipsv2_image_cls
+  data_root: /mnt/data4/CASTLE_MM26_Challenge/download_pipeline/processed_data
+  model_root: /mnt/data1/models/google/tipsv2-g14
+  output_root: /mnt/data4/CASTLE_MM26_Challenge/embedding_pipeline/tipsv2_image_cls/embedding_data
+  summary_path: /mnt/data4/CASTLE_MM26_Challenge/download_pipeline/processed_data/_manifests/video_processing_summary.csv
+
+model:
+  model_id: google/tipsv2-g14
+  image_size: 448
+  embedding_dim: 1536
+  precision: fp32
+
+runtime:
+  # gpu_ids/decode_workers match the operator manual's dual-GPU default command.
+  # FP32+TF32 benchmark tipsv2-fp32-tf32-benchmark-20260614T081527 selected
+  # per-GPU batch_size=24 for the default dual-GPU manual command.
+  gpu_ids: [0, 1]
+  batch_size: 24
+  decode_workers: 4
+  prefetch_batches_per_gpu: 2
+  max_retries: 2
+  max_gpu_utilization: 10
+  min_free_memory_mib: 30000
+  status_interval_seconds: 30
+  max_memory_fraction_per_gpu: 0.8
+  writer_command_queue_size: 32
+  writer_result_queue_size: 8
+  writer_event_queue_size: 64
+  writer_max_pending_hours: 2
+  writer_max_pending_batches: 512
+  writer_max_pending_bytes: 536870912
+
+parquet:
+  compression: zstd
+  compression_level: 3
+  row_group_size: 1024

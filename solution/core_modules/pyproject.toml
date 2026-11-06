@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "castle-mm26-core"
+version = "0.1.0"
+description = "CASTLE MM26 fully-automatic retrieval, rerank, QA, and submission core."
+requires-python = ">=3.9"
+dependencies = [
+  "numpy>=1.24",
+  "pyarrow>=12",
+  "PyYAML>=6",
+  "requests>=2.31",
+  "Pillow>=10",
+]
+
+[project.optional-dependencies]
+server = [
+  "torch",
+  "transformers",
+  "safetensors",
+  "FlagEmbedding",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["castle_mm26_core*"]

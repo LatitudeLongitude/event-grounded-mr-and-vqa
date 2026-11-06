@@ -1,0 +1,399 @@
+schema_version: castle_mm26_query_registry_v1
+challenge: CASTLE MM26
+official_source:
+  challenge_url: https://castle-dataset.github.io/challenges/mm26/
+  verified_at_utc: "<filled-by-preflight>"
+  page_snapshot_sha256: "<filled-by-preflight>"
+  extracted_queries_sha256: "<filled-by-preflight>"
+registered_unicode_normalizations: [unicode_nfc, curly_quote_to_ascii_for_retrieval, bjorn_source_ascii, bjorn_answer_display, whitespace_collapse]
+task_counts:
+  event_instance_search: 12
+  object_instance_search: 12
+  question_answering: 12
+global_defaults:
+  language: en
+  time_unit: seconds_since_day_start
+  output_time_format: HH:MM:SS
+  bjorn_source_name: Bjorn
+  bjorn_answer_name: "Björn"
+type_defaults:
+  event_instance_search:
+    expected_granularity: {primary_levels: [L2, L1], context_levels: [L3, L4], output_level: source_specific_interval}
+    evidence_policy: {primary_modalities: [visual], secondary_modalities: [text], min_independent_evidence: 1, allow_text_only_output: false}
+    output_profile: eis_interval_default
+  object_instance_search:
+    expected_granularity: {primary_levels: [L2, L1], context_levels: [L3], output_level: source_specific_interval}
+    evidence_policy: {primary_modalities: [visual], secondary_modalities: [text], min_independent_evidence: 1, allow_text_only_output: false}
+    visual_example_paths: []
+    visual_example_policy: {allow_visual_examples: true, if_missing: use_text_prompts_only}
+    object_state_constraints: {required: [], excluded_contexts: [], state_fit_rules: []}
+    output_profile: ois_interval_default
+  question_answering:
+    expected_granularity: {primary_levels: [L3, L4, L5], context_levels: [L2, L3, L4, L5], output_level: answer_text}
+    evidence_policy: {primary_modalities: [text], secondary_modalities: [visual, event_context], min_independent_evidence: 1, allow_text_only_output: true}
+    threshold_profile: qa_evidence_required
+    output_profile: qa_answer_default
+    answer_policy_defaults:
+      keyword_frames: {positive: [], negative: [], relation_predicates: []}
+      multilingual_aliases: {}
+      speaker_attribution: {allow_ego_source_hint: true, fixed_room_is_actor: false, require_relation_direction_for_relation_questions: true}
+      answer_template: "<answer>. Evidence: <evidence>."
+tasks:
+  - task_id: MM26-EIS01
+    task_type: event_instance_search
+    official_text: "Find instances of somebody pouring tea from the pot into a mug"
+    canonical_text_for_retrieval: "somebody pouring tea from a teapot into a mug"
+    visual_prompts: ["a person pouring tea from a teapot into a mug", "a teapot spout pouring tea into a mug"]
+    text_prompts: ["pouring tea into a mug", "tea poured from a teapot"]
+    negative_prompts: ["tea or coffee on a table without pouring", "holding a mug or teapot without pouring", "pouring coffee or hot water", "pouring an alcoholic beverage", "a coffee maker or kettle on a counter"]
+    recall_profile: eis_visual_high_recall
+    scoring_profile: visual_short_action
+    threshold_profile: eis_visual_short_action
+  - task_id: MM26-EIS02
+    task_type: event_instance_search
+    official_text: "Find instances of somebody opening the front door"
+    canonical_text_for_retrieval: "somebody opening the front door"
+    visual_prompts: ["a person opening the front door"]
+    text_prompts: ["opening the front door", "front door opened"]
+    negative_prompts: ["standing at the front door without opening it", "knocking on a closed door", "closing the front door", "interior door or hallway door"]
+    recall_profile: eis_visual_high_recall
+    scoring_profile: visual_short_action
+    threshold_profile: eis_visual_short_action
+  - task_id: MM26-EIS03
+    task_type: event_instance_search
+    official_text: "Find instances of somebody throwing a paper airplane"
+    canonical_text_for_retrieval: "somebody throwing a paper airplane"
+    visual_prompts: ["a person throwing a paper airplane"]
+    text_prompts: ["throwing a paper airplane", "paper airplane flying through the air"]
+    negative_prompts: ["folding paper or origami", "making a paper airplane", "holding a paper airplane without throwing it", "paper airplane lying on a table"]
+    recall_profile: eis_visual_high_recall
+    scoring_profile: visual_short_action
+    threshold_profile: eis_visual_short_action
+  - task_id: MM26-EIS04
+    task_type: event_instance_search
+    official_text: "Find instances of somebody speaking with a full mouth"
+    canonical_text_for_retrieval: "somebody speaking with a full mouth"
+    visual_prompts: ["a person speaking while eating"]
+    text_prompts: ["speaking with a full mouth", "talking while eating"]
+    negative_prompts: ["eating silently", "chewing without speaking", "speaking without food in the mouth", "drinking at the table"]
+    recall_profile: eis_text_visual_high_recall
+    scoring_profile: text_context_action
+    threshold_profile: eis_text_context_action
+  - task_id: MM26-EIS05
+    task_type: event_instance_search
+    official_text: "Find instances of somebody accidentally dropping something"
+    canonical_text_for_retrieval: "somebody accidentally dropping something"
+    visual_prompts: ["a person accidentally dropping an object"]
+    text_prompts: ["accidentally dropped something", "something falls from a hand"]
+    negative_prompts: ["placing something down", "picking something up", "object already on the floor", "Jenga blocks or wooden blocks on a table", "throwing intentionally"]
+    recall_profile: eis_visual_high_recall
+    scoring_profile: visual_short_action
+    threshold_profile: eis_visual_short_action
+  - task_id: MM26-EIS06
+    task_type: event_instance_search
+    official_text: "Find instances of somebody eating a piece of candy"
+    canonical_text_for_retrieval: "somebody eating a piece of candy"
+    visual_prompts: ["a person eating a small piece of candy"]
+    text_prompts: ["eating candy", "piece of candy"]
+    negative_prompts: ["eating a meal or sandwich", "eating chips or pastry", "holding candy without eating it", "candy bowl or wrapper only"]
+    recall_profile: eis_visual_high_recall
+    scoring_profile: visual_short_action
+    threshold_profile: eis_visual_short_action
+  - task_id: MM26-EIS07
+    task_type: event_instance_search
+    official_text: "Find instances of somebody pouring an alcoholic beverage"
+    canonical_text_for_retrieval: "somebody pouring an alcoholic beverage"
+    visual_prompts: ["a person pouring an alcoholic beverage", "a person pouring wine or liquor into a glass, bowl, pot, or cooking vessel"]
+    text_prompts: ["pouring alcohol", "pouring wine or whiskey", "pouring alcoholic beverage while cooking"]
+    negative_prompts: ["pouring tea or water", "bottles on a counter without pouring", "holding a glass without pouring", "coffee or soft drink", "non-alcoholic sauce or soup being poured"]
+    recall_profile: eis_text_visual_high_recall
+    scoring_profile: text_context_action
+    threshold_profile: eis_text_context_action
+  - task_id: MM26-EIS08
+    task_type: event_instance_search
+    official_text: "Find instances of somebody putting something into their pants pocket"
+    canonical_text_for_retrieval: "somebody putting something into their pants pocket"
+    visual_prompts: ["a person putting an object into their pants pocket"]
+    text_prompts: ["putting something into pants pocket", "pocket"]
+    negative_prompts: ["taking something out of a pocket", "putting something into a bag", "putting something into a jacket pocket", "holding something near a pocket without inserting it"]
+    recall_profile: eis_visual_high_recall
+    scoring_profile: visual_short_action
+    threshold_profile: eis_visual_short_action
+  - task_id: MM26-EIS09
+    task_type: event_instance_search
+    official_text: "Find instances of somebody sneezing"
+    canonical_text_for_retrieval: "somebody sneezing"
+    visual_prompts: ["a person sneezing"]
+    text_prompts: ["achoo", "bless you after a sneeze", "gesundheit after a sneeze", "sneezing"]
+    negative_prompts: ["coughing without a sneeze", "bless you without a sneeze response", "God bless you in a song or reading", "Rapunzel Gesundheit joke", "talking about the word sneezing", "covering mouth without sneezing", "wiping nose", "laughing or talking"]
+    audio_sensitive: true
+    lexical_marker_sweep: {required: true, marker_terms: ["sneeze", "sneezing", "sneezed", "achoo", "atchoo", "bless you", "gesundheit", "hatschi", "[sneeze]", "[sneezing]"], scan_inputs: [cleaned_transcripts, text_atoms], absence_scope: available_modalities_only}
+    evidence_policy: {primary_modalities: [transcript_marker], secondary_modalities: [visual, text, event_context], min_independent_evidence: 1, allow_text_only_output: false, allow_transcript_marker_primary: true, require_source_video_coverage: true, require_local_visual_recovery_audit: true}
+    recall_profile: eis_text_visual_high_recall
+    scoring_profile: text_context_action
+    threshold_profile: eis_text_context_action
+  - task_id: MM26-EIS10
+    task_type: event_instance_search
+    official_text: "Find instances of leftover food being packaged for later"
+    canonical_text_for_retrieval: "leftover food being packaged for later"
+    visual_prompts: ["leftover food being packaged for later", "leftovers being vacuum sealed, wrapped, boxed, or put into a container for later"]
+    text_prompts: ["leftover food packaged for later", "packing leftovers into a container", "vacuum sealing leftovers", "freezing leftovers for later", "wrapping or boxing leftover food"]
+    negative_prompts: ["fresh groceries in the fridge", "raw groceries or uncooked meat in store packaging", "throwing food packaging into trash", "cooking or serving food", "empty container or cleaning dishes", "talking about leftover food without packaging it"]
+    recall_profile: eis_text_visual_high_recall
+    scoring_profile: text_context_action
+    threshold_profile: eis_text_context_action
+    output_profile: eis_medium_activity
+  - task_id: MM26-EIS11
+    task_type: event_instance_search
+    official_text: "Find instances of someone playing the Austrian card game “Schnapsen”"
+    canonical_text_for_retrieval: "someone playing the Austrian card game Schnapsen"
+    visual_prompts: ["people playing Schnapsen with cards"]
+    text_prompts: ["Schnapsen", "Austrian card game", "Schnapsen rules"]
+    negative_prompts: ["UNO", "poker unrelated to Schnapsen", "chess, Jenga, or board games", "holding cards without playing Schnapsen", "ordinary card game without Schnapsen rules or gameplay evidence"]
+    recall_profile: eis_text_visual_high_recall
+    scoring_profile: long_activity
+    threshold_profile: eis_long_activity
+    output_profile: eis_long_activity
+  - task_id: MM26-EIS12
+    task_type: event_instance_search
+    official_text: "Find instances of someone laughing"
+    canonical_text_for_retrieval: "someone laughing"
+    visual_prompts: ["a person laughing"]
+    text_prompts: ["laughing", "hahaha", "ha ha", "giggle", "chuckles"]
+    negative_prompts: ["talking about laughing without laughing", "laughter in a book or reading", "spelling example with the word laugh", "smiling without laughing", "talking in a social group", "posing for the camera", "sneezing or coughing"]
+    audio_sensitive: true
+    lexical_marker_sweep: {required: true, marker_terms: ["laugh", "laughing", "laughed", "laughter", "haha", "hahaha", "hahahaha", "ha ha", "ha ha ha", "hehe", "hehehe", "hehehehe", "giggle", "giggles", "giggling", "chuckle", "chuckles", "chuckling", "[laughs]", "[laughter]"], scan_inputs: [cleaned_transcripts, text_atoms], absence_scope: available_modalities_only}
+    evidence_policy: {primary_modalities: [transcript_marker], secondary_modalities: [visual, text, event_context], min_independent_evidence: 1, allow_text_only_output: false, allow_transcript_marker_primary: true, require_source_video_coverage: true, require_local_visual_recovery_audit: true}
+    recall_profile: eis_text_visual_high_recall
+    scoring_profile: text_context_action
+    threshold_profile: eis_text_context_action
+    output_profile: eis_social_transcript
+
+  - task_id: MM26-OIS01
+    task_type: object_instance_search
+    official_text: "Find a UNO +2 card"
+    canonical_text_for_retrieval: "UNO +2 card"
+    visual_prompts: ["a UNO plus two card", "a +2 UNO card"]
+    text_prompts: ["UNO +2 card", "plus two card", "draw two card"]
+    negative_prompts: ["ordinary playing cards", "UNO cards without a plus two symbol", "UNO box or board game box", "card table without the draw two card"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: tiny_object
+    threshold_profile: ois_tiny_object
+  - task_id: MM26-OIS02
+    task_type: object_instance_search
+    official_text: "Find the blue whale plush toy"
+    canonical_text_for_retrieval: "blue whale plush toy"
+    visual_prompts: ["the blue whale plush toy", "a whale", "a blue whale", "a whale toy", "a whale plush toy", "a blue whale toy", "a blue whale stuffed animal", "a blue whale plush toy"]
+    text_prompts: ["blue whale plush toy", "whale plush"]
+    negative_prompts: ["blurry close-up of skin or clothing", "paper airplane or folded paper", "board game boxes or toy clutter", "blue object that is not a whale plush", "orca or other animal toy"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: distinctive_object
+    threshold_profile: ois_distinctive_object
+    output_profile: ois_persistent_object
+  - task_id: MM26-OIS03
+    task_type: object_instance_search
+    official_text: "Find the bird Christmas tree ornament"
+    canonical_text_for_retrieval: "bird Christmas tree ornament"
+    visual_prompts: ["a bird Christmas tree ornament"]
+    text_prompts: ["bird Christmas tree ornament", "Christmas ornament"]
+    negative_prompts: ["generic Christmas baubles", "Christmas tree without a bird ornament", "non-bird ornament", "marker pens or craft supplies", "Christmas lyrics about birds"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: tiny_fixed_object
+    threshold_profile: ois_tiny_object
+    output_profile: ois_persistent_object
+  - task_id: MM26-OIS04
+    task_type: object_instance_search
+    official_text: "Find the potato masher"
+    canonical_text_for_retrieval: "potato masher"
+    visual_prompts: ["a potato masher"]
+    text_prompts: ["potato masher"]
+    negative_prompts: ["whisk", "ladle or spatula", "cutlery drawer or dish rack", "cutting board", "ordinary kitchen utensils"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: kitchen_tool
+    threshold_profile: ois_distinctive_object
+    output_profile: ois_context_object
+  - task_id: MM26-OIS05
+    task_type: object_instance_search
+    official_text: "Find the tiny plastic toy cowboy hat"
+    canonical_text_for_retrieval: "tiny plastic toy cowboy hat"
+    visual_prompts: ["a tiny plastic toy cowboy hat"]
+    text_prompts: ["tiny cowboy hat", "plastic toy cowboy hat"]
+    negative_prompts: ["plastic toy playset", "toy pieces without the cowboy hat", "board game pieces", "toy bucket or toy animal", "large wearable hat or crown"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: tiny_object
+    threshold_profile: ois_tiny_object
+  - task_id: MM26-OIS06
+    task_type: object_instance_search
+    official_text: "Find a blue or black writing instrument (pen, pencil, marker, etc) not currently in use"
+    canonical_text_for_retrieval: "blue or black writing instrument not currently in use"
+    visual_prompts: ["a blue or black pen pencil or marker lying unused"]
+    text_prompts: ["blue pen", "black marker", "writing instrument not in use"]
+    negative_prompts: ["writing or drawing with the pen", "pen held in a hand", "active marker use", "red orange or green marker", "writing instrument currently in use"]
+    object_state_constraints: {required: [idle_object], excluded_contexts: ["active writing", "drawing with the pen"], state_fit_rules: [color_probe, static_vs_in_use_probe]}
+    recall_profile: ois_visual_high_recall
+    scoring_profile: stateful_object
+    threshold_profile: ois_distinctive_object
+  - task_id: MM26-OIS07
+    task_type: object_instance_search
+    official_text: "Find the electric vehicle charger"
+    canonical_text_for_retrieval: "electric vehicle charger"
+    visual_prompts: ["an electric vehicle charger"]
+    text_prompts: ["electric vehicle charger", "EV charger", "charging station", "charging cable"]
+    negative_prompts: ["car without a charger cable", "open fuel cap or charging flap only", "charger cable in the trunk", "ordinary power cable near the car", "car exterior without an EV charger"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: location_object
+    threshold_profile: ois_distinctive_object
+    output_profile: ois_location_object
+  - task_id: MM26-OIS08
+    task_type: object_instance_search
+    official_text: "Find a key or a key chain"
+    canonical_text_for_retrieval: "key or key chain"
+    visual_prompts: ["a key or key chain"]
+    text_prompts: ["key", "key chain"]
+    negative_prompts: ["handbag or backpack", "car door handle without a key", "holding a cigarette or small object", "table clutter without keys", "phone or hand close-up without keys"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: tiny_object
+    threshold_profile: ois_tiny_object
+  - task_id: MM26-OIS09
+    task_type: object_instance_search
+    official_text: "Find any hand tool not used for cooking"
+    canonical_text_for_retrieval: "hand tool not used for cooking"
+    visual_prompts: ["a hand tool that is not a cooking utensil"]
+    text_prompts: ["hand tool", "tool not used for cooking"]
+    negative_prompts: ["kitchen utensils", "cooking tools", "spoons ladles or spatulas", "cutlery drawer", "food preparation tools", "knife used for cooking"]
+    object_state_constraints: {required: [hand_tool], excluded_contexts: ["cooking utensil", "kitchen utensil", "food preparation"], state_fit_rules: [cooking_context_probe]}
+    recall_profile: ois_visual_high_recall
+    scoring_profile: category_exclusion
+    threshold_profile: ois_distinctive_object
+    output_profile: ois_context_object
+  - task_id: MM26-OIS10
+    task_type: object_instance_search
+    official_text: "Find a front/ego view of a smartphone"
+    canonical_text_for_retrieval: "front or ego view of a smartphone"
+    visual_prompts: ["a smartphone seen from the front or from an egocentric point of view"]
+    text_prompts: ["smartphone", "phone"]
+    negative_prompts: ["partial phone at the edge of the frame", "phone back or side view", "distant room view with no phone screen", "close-up black reflective object", "phone screen not visible"]
+    object_state_constraints: {required: [front_or_ego_view], excluded_contexts: ["distant room view only"], state_fit_rules: [viewpoint_probe]}
+    recall_profile: ois_visual_high_recall
+    scoring_profile: viewpoint_constrained
+    threshold_profile: ois_distinctive_object
+  - task_id: MM26-OIS11
+    task_type: object_instance_search
+    official_text: "Find a living non-human animals"
+    canonical_text_for_retrieval: "living non-human animals"
+    visual_prompts: ["a living non-human animal"]
+    text_prompts: ["animal", "pet", "living animal"]
+    negative_prompts: ["animal picture or sign", "landscape or grass without animals", "roadside sign", "toy or plush animal", "card game table", "people outdoors without animals"]
+    object_state_constraints: {required: [living_non_human_animal], excluded_contexts: ["toy animal", "plush toy", "animal picture"], state_fit_rules: [living_vs_toy_probe]}
+    recall_profile: ois_visual_high_recall
+    scoring_profile: living_category
+    threshold_profile: ois_distinctive_object
+    output_profile: ois_persistent_object
+  - task_id: MM26-OIS12
+    task_type: object_instance_search
+    official_text: "Find a TV remote"
+    canonical_text_for_retrieval: "TV remote"
+    visual_prompts: ["a TV remote control"]
+    text_prompts: ["TV remote", "remote control"]
+    negative_prompts: ["pens or pencils on the table", "wooden sticks or Jenga pieces", "remote-like black objects that are not a TV remote", "instruction booklet or box", "coffee table clutter without a TV remote"]
+    recall_profile: ois_visual_high_recall
+    scoring_profile: household_object
+    threshold_profile: ois_distinctive_object
+    output_profile: ois_context_object
+
+  - task_id: MM26-QA01
+    task_type: question_answering
+    official_text: "Who was the last one who did the reading experiment?"
+    canonical_text_for_retrieval: "last person who did the reading experiment"
+    text_prompts: ["reading experiment", "last one who did the reading experiment"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: last_who, expected_answer_type: person_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["reading experiment", "reading task", "experiment", "reading room"], negative: ["reading a message", "reading instructions only", "ordinary reading without the experiment", "talking about reading without doing it", "has not done the reading experiment"], relation_predicates: ["did", "performed", "completed", "finished"]}, ordering: {sort_by: end_second, direction: descending, require_actor: true}}
+  - task_id: MM26-QA02
+    task_type: question_answering
+    official_text: "How many people went grocery shopping on Tuesday morning?"
+    canonical_text_for_retrieval: "people went grocery shopping on Tuesday morning"
+    text_prompts: ["grocery shopping", "went grocery shopping", "went shopping Tuesday morning", "came back from the store", "bought groceries Tuesday morning"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: count_people, expected_answer_type: count, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["grocery shopping", "shopping", "supermarket", "went shopping", "went grocery shopping", "came back from the store", "got groceries", "bought groceries"], negative: ["online shopping", "shopping list only", "talking about shopping without going", "buying groceries tomorrow", "going shopping tomorrow", "tomorrow morning", "unpacking groceries at home", "cooking after shopping"], relation_predicates: ["went", "went to", "came with", "joined", "shopping trip"]}, time_filters: {weekday_alias: Tuesday, day_filter: 1, time_window: ["08:00:00", "12:00:00"]}, count_unit: canonical_person, dedupe_policy: same_person_once_across_sources_and_segments, event_state: {required: completed, reject_future_plan: true, completed_markers: ["went grocery shopping", "went shopping", "went to the store", "came back from the store", "got groceries", "bought groceries"], future_markers: ["tomorrow", "tomorrow morning", "going shopping", "going to go shopping", "will go shopping", "will buy groceries", "plan to go", "planning to go", "later", "next morning"]}}
+  - task_id: MM26-QA03
+    task_type: question_answering
+    official_text: "What alcoholic sweet did Klaus bring?"
+    canonical_text_for_retrieval: "what alcoholic sweet Klaus brought"
+    text_prompts: ["Klaus brought alcoholic sweet", "alcoholic sweet", "Klaus brought sweet"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: what_object, expected_answer_type: object_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["Klaus", "brought", "bring", "alcoholic sweet", "sweet", "candy"], negative: ["tea", "coffee", "non-alcoholic", "ordinary dessert", "drinking alcohol without a sweet", "someone other than Klaus brought it"], relation_predicates: ["brought", "bring", "brought along", "gave", "introduced"]}, extraction: {target_window_tokens_after_predicate: 12, require_context_terms: ["alcoholic", "alcohol", "sweet", "dessert", "candy"], min_extraction_hits: 1}}
+  - task_id: MM26-QA04
+    task_type: question_answering
+    official_text: "How many rounds of chess did Allie play with Klaus?"
+    canonical_text_for_retrieval: "rounds of chess Allie played with Klaus"
+    text_prompts: ["Allie Klaus chess rounds", "rounds of chess", "Allie Klaus checkmate play again", "Klaus Allie chess game checkmate"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: count_rounds, expected_answer_type: count, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["chess", "round", "game", "Allie", "Klaus", "played chess", "checkmate", "play again"], negative: ["card game", "Schnapsen", "UNO", "Happy Quiz", "one chess move without a round", "someone other than Allie with Klaus"], relation_predicates: ["played", "round", "game", "again", "next game", "checkmate"]}, count_unit: chess_round, dedupe_policy: same_round_if_time_iou_ge_0_5_or_gap_le_120s}
+  - task_id: MM26-QA05
+    task_type: question_answering
+    official_text: "Who drew a picture of a church behind a bridge?"
+    canonical_text_for_retrieval: "who drew a picture of a church behind a bridge"
+    text_prompts: ["drew a picture of a church behind a bridge", "drawing church bridge"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: who_did_action, expected_answer_type: person_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["drew", "drawing", "picture", "church", "bridge", "behind a bridge"], negative: ["photograph", "looking at a church", "talking about a bridge only", "castle drawing", "outside view without drawing"], relation_predicates: ["drew", "drawn by", "made", "sketched"]}, actor_resolution: explicit_relation_then_overlapping_ego_source}
+  - task_id: MM26-QA06
+    task_type: question_answering
+    official_text: "What did Cathal and Klaus do when they went outside the house in the evening with a torch?"
+    canonical_text_for_retrieval: "what Cathal and Klaus did outside the house in the evening with a torch"
+    text_prompts: ["Cathal Klaus outside house evening night", "what did they do outside the house at night", "leaving the house and going outside at night", "opening or closing the house door when going outside at night", "getting shoes before going outside", "a brief trip outside the house and then returning home"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: what_activity, expected_answer_type: activity_phrase, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["Cathal", "Klaus", "outside", "torch", "flashlight", "evening", "night", "went outside", "door", "shoes"], negative: ["phone torch indoors", "talking about a torch without going outside", "daylight outside", "going to the bar", "checking an EV charger", "talking about a camera without a torch", "locked out", "window that was light", "window was light", "spend the night outside", "yesterday"], relation_predicates: ["went outside", "looked", "searched", "checked", "walked"]}, time_filters: {time_window: ["17:30:00", "23:59:59"]}, activity_phrase_policy: concise_verb_phrase_from_top_cluster, activity_event: {required_people: ["Cathal", "Klaus"], positive_terms: ["outside", "night", "door", "shoes"], negative_terms: ["locked out", "window that was light", "window was light", "spend the night outside", "yesterday"], reject_negative_context: true}}
+  - task_id: MM26-QA07
+    task_type: question_answering
+    official_text: "Who was scraping burnt food from a pan into the trash?"
+    canonical_text_for_retrieval: "who was scraping burnt food from a pan into the trash"
+    text_prompts: ["scraping burnt food from a pan into the trash", "burnt food pan trash", "first-person description of scraping burnt food from cookware", "scrape burnt pan into bin", "I can scrape", "I scrape", "I scraped", "I am scraping", "I'm scraping", "I was scraping", "I will scrape", "I'll scrape", "I have scraped", "I've scraped"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: who_did_action, expected_answer_type: person_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["scraping", "scrape", "burnt food", "pan", "trash", "bin", "spoon"], negative: ["washing a pan", "throwing away packaging", "scraping a plate", "cooking in a pan without scraping burnt food", "emptying trash only", "washing dishes", "turn on the heating", "heating"], relation_predicates: ["scraped", "scraping", "scrape it", "put into the trash", "threw away"]}, visual_probe_terms: ["pan", "trash", "scraping food"], actor_resolution: kitchen_action_plus_overlapping_ego_or_explicit_text, actor_resolution_policy: {prefer_source_first_person_action: true, first_person_action_terms: ["I can scrape", "I scrape", "I scraped", "I am scraping", "I'm scraping", "I was scraping", "I will scrape", "I'll scrape", "I have scraped", "I've scraped"], action_terms: ["scrape", "scraping", "burnt", "pan", "trash", "bin", "spoon"], negative_actor_terms: ["turn on the heating", "heating"]}}
+  - task_id: MM26-QA08
+    task_type: question_answering
+    official_text: "Who taught Björn a card game?"
+    canonical_text_for_retrieval: "who taught Bjorn a card game"
+    text_prompts: ["taught Bjorn a card game", "taught Björn a card game"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: relation_who, expected_answer_type: person_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, entity_aliases: {"Björn": [Bjorn, "Björn"]}, keyword_frames: {positive: ["taught", "teach", "learned", "Bjorn", "Björn", "card game", "Schnapsen"], negative: ["Björn taught", "Bjorn explains", "watching a card game only", "playing UNO without teaching", "poker request without a teacher", "group card game with no direction"], relation_predicates: ["taught", "teach", "explained to", "showed Bjorn", "showed Björn"]}, relation_direction: {subject_role: teacher, object: "Björn", require_direction: true}}
+  - task_id: MM26-QA09
+    task_type: question_answering
+    official_text: "Who was sick one morning?"
+    canonical_text_for_retrieval: "who was sick one morning"
+    text_prompts: ["sick one morning", "ill one morning", "unwell morning"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: who_state, expected_answer_type: person_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["sick", "ill", "unwell", "not feeling well", "feeling sick", "morning"], negative: ["sick joke", "sick of", "someone else says sick as slang", "car sick", "sick tomorrow", "not turned up without being sick"], relation_predicates: ["was sick", "felt sick", "was ill", "not feeling well"]}, time_filters: {time_window: ["08:00:00", "12:00:00"]}, state_subject_policy: described_person_not_default_speaker}
+  - task_id: MM26-QA10
+    task_type: question_answering
+    official_text: "What song were Klaus and Onanong practicing on the guitar?"
+    canonical_text_for_retrieval: "song Klaus and Onanong were practicing on the guitar"
+    text_prompts: ["Klaus Onanong practicing guitar song", "what song guitar practice"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: song_title, expected_answer_type: song_title, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["Klaus", "Onanong", "guitar", "song", "practice", "practicing", "playing"], negative: ["listening to a song", "talking about guitar without practicing", "guitar nearby without practice", "practicing without Klaus and Onanong", "choosing a song only", "other instrument"], relation_predicates: ["practicing", "played", "playing", "song called", "title"]}, extraction: {preserve_case: true, allow_adjacent_chunks: true, target_window_tokens_after_song_marker: 16}}
+  - task_id: MM26-QA11
+    task_type: question_answering
+    official_text: "Who was in charge of cooking the Indian food?"
+    canonical_text_for_retrieval: "who was in charge of cooking the Indian food"
+    text_prompts: ["in charge of cooking Indian food", "responsible for Indian food"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: responsible_person, expected_answer_type: person_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["Indian food", "cooking", "in charge", "responsible", "lead", "who is cooking"], negative: ["eating Indian food", "ordering Indian food", "ordinary helper", "cooking non-Indian food", "all participants eating", "talking about Indian heritage"], relation_predicates: ["in charge", "responsible", "leading", "decided", "main cook"]}, role_policy: lead_or_responsible_person_not_all_participants}
+  - task_id: MM26-QA12
+    task_type: question_answering
+    official_text: "What are the first cookies that Luca baked called?"
+    canonical_text_for_retrieval: "first cookies Luca baked called"
+    text_prompts: ["Luca baked cookies called", "first cookies Luca baked", "first cookie name", "Luca baked first batch"]
+    recall_profile: qa_text_high_recall
+    scoring_profile: qa_evidence
+    answer_policy: {reducer: first_named_entity, expected_answer_type: food_name, min_supporting_evidence: 1, low_confidence_min_supporting_evidence: 2, keyword_frames: {positive: ["Luca", "baked", "cookies", "called", "first cookies", "cookie name"], negative: ["bought cookies", "ate cookies only", "later cookies", "cookie dough only without a name", "later cookie name"], relation_predicates: ["baked", "called", "named", "are called"]}, ordering: {sort_by: start_second, direction: ascending, require_named_entity: true}, extraction: {allow_adjacent_chunks: true, target_window_tokens_after_called: 12}}
